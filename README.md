@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hati
 
-## Getting Started
+![Version](https://img.shields.io/badge/version-v0.1.0--beta-blue.svg)
+![Status](https://img.shields.io/badge/status-skeleton-orange.svg)
 
-First, run the development server:
+**Hati** is a modular dashboard and content aggregation engine built with Next.js. It features a custom resolver engine to fetch and normalize data from various sources (GitHub, Reddit, YouTube, RSS) into a unified widget interface.
+
+> **Note:** This project is currently in **Beta (v0.1.0)**. The core engine ("Skeleton") is stable, but features are actively being added.
+
+## 🚀 Features (v0.1.0)
+
+* **Core Engine:** Custom data fetching and deduplication logic (`lib/hati/engine`).
+* **Resolvers:** Built-in support for:
+    * GitHub
+    * Reddit
+    * YouTube
+    * RSS Feeds
+* **Widgets:** Pre-built UI components for Video, Weather, and RSS feeds.
+* **Tech Stack:** Next.js 14+, TypeScript, Tailwind CSS, Bun, Docker.
+
+## 🛠️ Installation
+
+### Prerequisites
+* [Bun](https://bun.sh) (Recommended) or Node.js
+* Docker (Optional, for containerized deployment)
+
+### Local Development
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/prathamdupare/hati.git](https://github.com/prathamdupare/hati.git)
+    cd hati
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    bun install
+    ```
+
+3.  **Configure the app:**
+    Create a `.env` file based on your needs, or modify `hati.yaml` for engine configuration.
+
+4.  **Run the development server:**
+    ```bash
+    bun dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) with your browser.
+
+## 🐳 Docker Deployment
+
+A `Dockerfile` and `docker-compose.yml` are included for easy deployment.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker-compose up -d --build
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🗺️ Roadmap
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+We are currently in the **Skeleton Phase (v0.1.0)**.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* [x] Core Engine & Caching
+* [x] Basic Resolvers (GitHub, YT, Reddit)
+* [ ] User Authentication
+* [ ] Plugin System for 3rd party widgets
+* [ ] Customizable Layouts
 
-## Learn More
+## 🤝 Contributing
 
-To learn more about Next.js, take a look at the following resources:
+This project follows Semantic Versioning.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **Current Branch:** `main` (Development)
+* **Current Release:** `v0.1.0`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Please open an issue to discuss proposed changes before submitting a PR.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
