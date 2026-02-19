@@ -1,0 +1,21 @@
+pages:
+  - name: Pratham's Dashboard
+    columns:
+      - size: small
+        widgets:
+          - type: weather       # <--- NEW
+            location: London    # <--- Your City
+          - type: rss
+            limit: 20
+            feeds:
+              - url: https://hnrss.org/frontpage
+                title: Hacker News
+              - url: https://timesofindia.indiatimes.com/rssfeedstopstories.cms
+                title: The Times of India
+      - size: medium
+        widgets:
+          - type: videos
+            limit: 8
+            channels:
+              - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
+              - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling

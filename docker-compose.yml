@@ -1,0 +1,14 @@
+services:
+  hati:
+    image: hati-dashboard:latest 
+    container_name: hati
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the config file so they can edit it easily
+      - ./hati.yaml:/app/hati.yaml
+      # Mount the cache so it persists across restarts
+      - ./cache:/app/.hati-cache.json 
+    environment:
+      - TZ=Asia/Kolkata # Or their timezone
