@@ -1,3 +1,4 @@
+
 export interface HatiItem {
   id: string;
   title: string;
@@ -9,11 +10,13 @@ export interface HatiItem {
   feedTitle?: string;
   platform: 'youtube' | 'blog' | 'generic';
 }
+
 export interface HatiFeed {
   url: string;
   label: string;
 }
 
+// Used by the RSS Parser engine
 export interface RawFeedItem {
   id?: string;
   link?: string;
@@ -25,13 +28,13 @@ export interface RawFeedItem {
   summary?: string;
   authors?: { name?: string }[];
   
-  // ⚡️ NAMESPACE EXTENSIONS
+  // NAMESPACE EXTENSIONS
   yt?: {
     videoId?: string;
     channelId?: string;
   };
   media?: {
-    thumbnail?: { url: string } | { url: string }[]; // Can be array or object
+    thumbnail?: { url: string } | { url: string }[]; 
     group?: {
       thumbnail?: { url: string } | { url: string }[];
       content?: { url: string };
@@ -44,3 +47,115 @@ export interface RawFeed {
   items?: RawFeedItem[];
 }
 
+export type WidgetType = 
+  | "calendar" 
+  | "rss" 
+  | "twitch-channels" 
+  | "group" 
+  | "hacker-news" 
+  | "lobsters" 
+  | "videos" 
+  | "reddit" 
+  | "weather" 
+  | "markets" 
+  | "releases";
+
+export type ColumnSize = "small" | "medium" | "large" | "full";
+
+export interface BaseWidget {
+  type: WidgetType;
+  title?: string;
+  cache?: string; 
+}
+
+
+export interface CalendarWidgetConfig extends BaseWidget {
+  type: "calendar";
+  "first-day-of-week"?: "monday" | "sunday";
+}
+
+export interface RSSWidgetConfig extends BaseWidget {
+  type: "rss";
+  limit?: number;
+  "collapse-after"?: number;
+  feeds: { 
+    url: string; 
+    title?: string; 
+    limit?: number 
+  }[];
+}
+
+export interface TwitchChannelsWidgetConfig extends BaseWidget {
+  type: "twitch-channels";
+  channels: string[];
+}
+
+export interface VideoWidgetConfig extends BaseWidget {
+  type: "videos";
+  channels: string[]; 
+  limit?: number;
+}
+
+export interface RedditWidgetConfig extends BaseWidget {
+  type: "reddit";
+  subreddit: string;
+  "show-thumbnails"?: boolean;
+}
+
+export interface WeatherWidgetConfig extends BaseWidget {
+  type: "weather";
+  location: string;
+  units?: "metric" | "imperial";
+  "hour-format"?: "12h" | "24h";
+  "hide-location"?: boolean;
+}
+
+export interface MarketsWidgetConfig extends BaseWidget {
+  type: "markets";
+  markets: { 
+    symbol: string; 
+    name?: string 
+  }[];
+}
+
+export interface ReleasesWidgetConfig extends BaseWidget {
+  type: "releases";
+  token?: string;
+  repositories: string[]; 
+}
+
+export interface GroupWidgetConfig extends BaseWidget {
+  type: "group";
+  widgets: WidgetConfig[]; 
+}
+
+// Union of all possible widget configurations
+export type WidgetConfig = 
+  | CalendarWidgetConfig
+  | RSSWidgetConfig
+  | TwitchChannelsWidgetConfig
+  | VideoWidgetConfig
+  | RedditWidgetConfig
+  | WeatherWidgetConfig
+  | MarketsWidgetConfig
+  | ReleasesWidgetConfig
+  | GroupWidgetConfig
+  | BaseWidget; 
+
+export interface ColumnConfig {
+  size: ColumnSize;
+  widgets: WidgetConfig[];
+}
+
+export interface PageConfig {
+  name: string;
+  "hide-desktop-navigation"?: boolean;
+  columns: ColumnConfig[];
+}
+
+export interface HatiConfig {
+  pages: PageConfig[];
+  theme?: {
+    "background-image"?: string;
+  };
+}

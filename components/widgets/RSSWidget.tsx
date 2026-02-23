@@ -1,8 +1,18 @@
-
 import { runEngine } from "@/lib/hati/engine";
-import { RSSWidget as RSSConfig } from "@/lib/hati/config";
+import { RSSWidgetConfig } from "@/lib/hati/types";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-function timeAgo(dateStr: string) {
+function formatTimeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
@@ -10,58 +20,63 @@ function timeAgo(dateStr: string) {
   if (minutes < 1) return "Just now";
   if (hours < 1) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
-  return Math.floor(hours / 24) + "d ago";
+  return `${Math.floor(hours / 24)}d ago`;
 }
 
-export async function RSSWidget({ config }: { config: RSSConfig }) {
-  const urls = config.feeds.map(f => f.url);
+export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
+  const urls = config.feeds.map((f) => f.url);
   const items = await runEngine(urls);
 
-  items.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  items.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+
   const displayItems = items.slice(0, config.limit ?? 5);
 
   return (
-    // bg-card / text-card-foreground handles the theme background
-    <div className="bg-card text-card-foreground border rounded-xl overflow-hidden shadow-sm flex flex-col h-full">
-      {/* Header */}
-      <div className="px-5 py-4 border-b flex justify-between items-center bg-muted/20">
-        <h3 className="font-semibold text-sm">
-          {config.feeds.length === 1 ? config.feeds[0].title : "Feeds"}
-        </h3>
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold border px-1.5 rounded">
-          RSS
-        </span>
-      </div>
+    <Card className="h-full overflow-hidden">
+      <CardHeader>
+        <CardTitle className="text-sm">
+          {config.title ||
+            (config.feeds.length === 1 ? config.feeds[0].title : "Feeds")}
+        </CardTitle>
+        <CardAction>
+          <Badge variant="secondary">RSS</Badge>
+        </CardAction>
+      </CardHeader>
 
-      {/* Content List */}
-      <div className="divide-y">
-        {displayItems.map((item) => (
-          <a
-            key={item.id}
-            href={item.link}
-            target="_blank"
-            className="group block px-5 py-3 hover:bg-muted/50 transition-colors"
-          >
-            <div className="flex flex-col gap-1">
-              {/* Primary Text */}
-              <span className="text-[13px] font-medium leading-snug group-hover:text-primary transition-colors line-clamp-2">
-                {item.title}
-              </span>
+      <CardContent className="flex-1 px-0">
+        <ScrollArea className="h-full">
+          <div className="flex flex-col">
+            {displayItems.map((item, index) => (
+              <div key={item.id}>
+                {index > 0 && <Separator />}
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block px-6 py-4 hover:bg-accent"
+                >
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium leading-none group-hover:underline underline-offset-4">
+                      {item.title}
+                    </span>
 
-              {/* Meta Data (Muted) */}
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                  {item.feedTitle?.slice(0, 20)}
-                </span>
-                <span className="text-[10px] text-muted-foreground">•</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {timeAgo(item.publishedAt)}
-                </span>
+                    <CardDescription className="flex items-center gap-2 text-xs">
+                      <span className="max-w-32 truncate font-semibold">
+                        {item.feedTitle}
+                      </span>
+                      <span>{"•"}</span>
+                      <span>{formatTimeAgo(item.publishedAt)}</span>
+                    </CardDescription>
+                  </div>
+                </a>
               </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 }
