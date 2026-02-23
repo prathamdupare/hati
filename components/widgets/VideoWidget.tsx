@@ -23,8 +23,8 @@ export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
     (id) => `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`
   );
 
-  const items = await runEngine(urls);
-  
+  const { items } = await runEngine(urls);
+
   // Sort: Newest first
   items.sort(
     (a, b) =>
@@ -41,8 +41,8 @@ export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
           {config.title || "Latest Videos"}
         </CardTitle>
         {/* Custom style to match YouTube Red, but using Badge structure */}
-        <Badge 
-          variant="outline" 
+        <Badge
+          variant="outline"
           className="text-[10px] text-red-500 border-red-500/20 bg-red-500/10 font-bold uppercase"
         >
           YouTube
@@ -77,12 +77,12 @@ export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
 
                 {/* Timestamp Overlay */}
                 <div className="absolute bottom-1.5 right-1.5">
-                   <Badge 
-                     variant="secondary" 
-                     className="bg-black/70 hover:bg-black/80 text-white border-white/10 text-[10px] h-5 px-1.5 backdrop-blur-sm"
-                   >
+                  <Badge
+                    variant="secondary"
+                    className="bg-black/70 hover:bg-black/80 text-white border-white/10 text-[10px] h-5 px-1.5 backdrop-blur-sm"
+                  >
                     {formatTimeAgo(item.publishedAt)}
-                   </Badge>
+                  </Badge>
                 </div>
               </div>
 

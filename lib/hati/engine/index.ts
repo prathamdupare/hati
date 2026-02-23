@@ -3,9 +3,16 @@ import { cachedFetch, getCachedResolution, setCachedResolution } from "./cache"
 import { parse } from "./parse"
 import { normalize } from "./normalize"
 import { dedupe } from "./dedupe"
-import { HatiItem } from "../types"
+import { EngineError, HatiItem } from "../types"
 
-export async function runEngine(urls: string[]): Promise<HatiItem[]> {
+
+export interface EngineResult {
+  items: HatiItem[];
+  errors: EngineError[];
+}
+
+export async function runEngine(urls: string[]): Promise<EngineResult> {
+  const errors: EngineError[] = [];
   const jobs = urls.map(async (url) => {
     try {
       // 1. Resolve & Cache Check
@@ -29,15 +36,21 @@ export async function runEngine(urls: string[]): Promise<HatiItem[]> {
       return normalize(parsed);
 
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(`Engine error for ${url}: ${err.message}`);
-      } else {
-        console.error(`Unexpected error for ${url}:`, err);
-      }
+      const message = err instanceof Error ? err.message : "Unknown error";
+      errors.push({
+        url,
+        message,
+        timestamp: new Date().toLocaleTimeString(),
+      });
       return []
     }
   })
 
   const results = await Promise.all(jobs)
-  return dedupe(results.flat())
+  return {
+    items: dedupe(results.flat()),
+    errors: errors
+
+  }
+
 }

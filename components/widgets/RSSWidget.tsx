@@ -25,7 +25,7 @@ function formatTimeAgo(dateStr: string) {
 
 export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
   const urls = config.feeds.map((f) => f.url);
-  const items = await runEngine(urls);
+  const { items } = await runEngine(urls);
 
   items.sort(
     (a, b) =>

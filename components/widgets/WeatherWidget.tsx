@@ -53,7 +53,7 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
   const conditionDesc = current.weatherDesc[0].value;
 
   return (
-    <Card className="h-full flex flex-col justify-center">
+    <Card className=" flex flex-col justify-center">
       <CardContent className="flex items-center justify-between p-6">
         <div className="flex flex-col gap-1">
           {/* Temperature */}

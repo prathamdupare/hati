@@ -159,3 +159,9 @@ export interface HatiConfig {
     "background-image"?: string;
   };
 }
+
+export interface EngineError {
+  url: string;
+  message: string;
+  timestamp: string;
+}
