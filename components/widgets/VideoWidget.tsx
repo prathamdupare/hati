@@ -120,17 +120,10 @@ interface VideoWidgetClientProps {
 export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
   return (
     <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 px-5 pt-5">
-        <CardTitle className="text-sm font-semibold tracking-tight">
-          {config.title || "Latest Videos"}
+      <CardHeader className="pb-2 px-4 pt-4">
+        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
+          {config.title || "LATEST VIDEOS"}
         </CardTitle>
-        <Badge
-          variant="outline"
-          className="gap-1 text-[10px] font-semibold uppercase tracking-wide"
-        >
-          <Youtube className="w-3 h-3" />
-          YouTube
-        </Badge>
       </CardHeader>
 
       <Separator />

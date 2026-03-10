@@ -36,17 +36,11 @@ export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
 
   return (
     <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 px-5 pt-5 pb-3">
-        <CardTitle className="text-sm font-semibold tracking-tight">
+      <CardHeader className="pb-2 px-4 pt-4">
+        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
           {config.title ||
-            (config.feeds.length === 1 ? config.feeds[0].title : "Feeds")}
+            (config.feeds.length === 1 ? config.feeds[0].title : "FEEDS")}
         </CardTitle>
-        <CardAction>
-          <Badge variant="outline" className="gap-1 text-[10px] font-semibold uppercase tracking-wide">
-            <Rss className="w-3 h-3" />
-            RSS
-          </Badge>
-        </CardAction>
       </CardHeader>
 
       <Separator />

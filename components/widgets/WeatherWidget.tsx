@@ -1,5 +1,7 @@
 import { WeatherWidgetConfig } from "@/lib/hati/types";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardAction } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { 
   Cloud, 
   Sun, 
@@ -39,11 +41,19 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
 
   if (!data) {
     return (
-      <Card className="h-full flex items-center justify-center p-6">
-        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-          <AlertCircle className="h-6 w-6" />
-          <span className="text-sm font-medium">Weather Unavailable</span>
-        </div>
+      <Card className="flex flex-col overflow-hidden">
+        <CardHeader className="pb-2 px-4 pt-4">
+          <CardTitle className="text-sm font-semibold tracking-tight uppercase">
+            {config.title || "WEATHER"}
+          </CardTitle>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex-1 flex items-center justify-center p-6">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <AlertCircle className="h-6 w-6" />
+            <span className="text-sm font-medium">Unavailable</span>
+          </div>
+        </CardContent>
       </Card>
     );
   }
@@ -53,28 +63,38 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
   const conditionDesc = current.weatherDesc[0].value;
 
   return (
-    <Card className=" flex flex-col justify-center">
-      <CardContent className="flex items-center justify-between p-6">
-        <div className="flex flex-col gap-1">
-          {/* Temperature */}
-          <span className="text-4xl font-bold tracking-tighter">
-            {current.temp_C}°C
-          </span>
-          
-          {/* Location & Condition */}
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-muted-foreground">
-              {locationName}
-            </span>
-            <span className="text-xs text-muted-foreground/80 capitalize">
-              {conditionDesc}
-            </span>
-          </div>
-        </div>
+    <Card className="flex flex-col overflow-hidden">
+      <CardHeader className="pb-2 px-4 pt-4">
+        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
+          {config.title || "WEATHER"}
+        </CardTitle>
+      </CardHeader>
 
-        {/* Dynamic Icon */}
-        <div className="pl-4">
-          <WeatherIcon condition={conditionDesc} />
+      <Separator />
+
+      <CardContent className="flex-1 flex items-center justify-center p-6">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col gap-1">
+            {/* Temperature */}
+            <span className="text-4xl font-bold tracking-tighter">
+              {current.temp_C}°C
+            </span>
+            
+            {/* Location & Condition */}
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-muted-foreground">
+                {locationName}
+              </span>
+              <span className="text-xs text-muted-foreground/80 capitalize">
+                {conditionDesc}
+              </span>
+            </div>
+          </div>
+
+          {/* Dynamic Icon */}
+          <div className="pl-4">
+            <WeatherIcon condition={conditionDesc} />
+          </div>
         </div>
       </CardContent>
     </Card>
