@@ -9,6 +9,7 @@ pages:
           - type: weather       # <--- NEW
             location: Bhopal    # <--- Your City
           - type: calendar       # <--- NEW
+          - type: hacker-news   # <--- NEW
       - size: medium
         widgets:
           - type: videos
