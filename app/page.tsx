@@ -1,7 +1,7 @@
-import { loadConfig } from "@/lib/hati/config";
-import { initCache } from "@/lib/hati/engine/cache";
+import { loadConfig, getConfig } from "@/lib/hati/config";
+import { runEngine } from "@/lib/hati/engine";
 import { Column } from "@/components/Column";
-import { VideoWidget } from "@/components/widgets/VideoWidget";
+import { VideoWidgetClient } from "@/components/widgets/VideoWidget";
 import { WeatherWidget } from "@/components/widgets/WeatherWidget";
 import { RSSWidget } from "@/components/widgets/RSSWidget";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -15,10 +15,26 @@ import {
 import { CalendarWidget } from "@/components/widgets/CalendarWidget";
 import { ErrorCenter } from "@/components/ErrorCenter";
 
-export const dynamic = "force-dynamic"; // ✅ Add this
+export const revalidate = 300;
+
+async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
+  const urls = config.channels.map(
+    (id) => `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`
+  );
+  const { items } = await runEngine(urls);
+
+  items.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+
+  const limited = config.limit ? items.slice(0, config.limit) : items;
+  return <VideoWidgetClient items={limited} config={config} />;
+}
+
 export default async function Page() {
-  await initCache();
   const config = await loadConfig("hati.yaml");
+  getConfig(); // Ensure config is stored for cache TTL access
   const page = config.pages[0];
 
   const allErrors: EngineError[] = [];

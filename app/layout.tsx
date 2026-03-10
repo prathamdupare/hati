@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { Lora } from "next/font/google"; // 👈 Change Georgia to Lora
+import { Outfit, Merriweather } from "next/font/google";
 
-const fontSerif = Lora({
+const fontSans = Outfit({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontSerif = Merriweather({
+  weight: ["300", "400", "700", "900"],
   subsets: ["latin"],
   variable: "--font-serif",
 });
@@ -22,9 +28,9 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${fontSerif.variable}  antialiased`}
-        >
+          <body
+            className={`${fontSans.variable} ${fontSerif.variable} antialiased`}
+          >
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

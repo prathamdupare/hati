@@ -158,6 +158,9 @@ export interface HatiConfig {
   theme?: {
     "background-image"?: string;
   };
+  cache?: {
+    ttl?: number; // in seconds, default 300 (5 min)
+  };
 }
 
 export interface EngineError {
