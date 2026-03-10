@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { runEngine } from "@/lib/hati/engine";
-import { VideoWidgetConfig } from "@/lib/hati/types";
+import { VideoWidgetConfig, HatiItem } from "@/lib/hati/types";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,11 +20,10 @@ function formatTimeAgo(dateStr: string) {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d ago`;
-  return new Date(dateStr).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-// ─── Inner client component for expand/collapse ────────────────────────────────
-function VideoGrid({ items }: { items: any[] }) {
+function VideoGrid({ items }: { items: HatiItem[] }) {
   const [expanded, setExpanded] = useState(false);
 
   const hasMore = items.length > INITIAL_LIMIT;
@@ -42,7 +40,6 @@ function VideoGrid({ items }: { items: any[] }) {
             rel="noopener noreferrer"
             className="group flex flex-col gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {/* Thumbnail */}
             <div className="relative rounded-lg overflow-hidden bg-muted border shadow-sm transition-shadow duration-200 group-hover:shadow-md">
               <AspectRatio ratio={16 / 9}>
                 {item.thumbnail ? (
@@ -57,14 +54,12 @@ function VideoGrid({ items }: { items: any[] }) {
                   </div>
                 )}
 
-                {/* Play overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/30 backdrop-blur-[1px]">
                   <div className="rounded-full bg-background/80 p-1 shadow-md border border-border/60">
                     <PlayCircle className="w-8 h-8 text-foreground" strokeWidth={1.5} />
                   </div>
                 </div>
 
-                {/* Timestamp pill */}
                 <div className="absolute bottom-2 right-2">
                   <Badge
                     variant="secondary"
@@ -76,7 +71,6 @@ function VideoGrid({ items }: { items: any[] }) {
               </AspectRatio>
             </div>
 
-            {/* Meta */}
             <div className="flex flex-col gap-0.5 px-0.5">
               <span className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline underline-offset-4 decoration-muted-foreground/40">
                 {item.title}
@@ -96,7 +90,7 @@ function VideoGrid({ items }: { items: any[] }) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setExpanded((v) => !v)}
+              onClick={() => setExpanded((v: boolean) => !v)}
               className="gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
             >
               {expanded ? (
@@ -118,20 +112,12 @@ function VideoGrid({ items }: { items: any[] }) {
   );
 }
 
-// ─── Main server component ─────────────────────────────────────────────────────
-export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
-  const urls = config.channels.map(
-    (id) => `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`
-  );
-  const { items } = await runEngine(urls);
+interface VideoWidgetClientProps {
+  items: HatiItem[];
+  config: VideoWidgetConfig;
+}
 
-  items.sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
-
-  const limited = config.limit ? items.slice(0, config.limit) : items;
-
+export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
   return (
     <Card className="h-full flex flex-col overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 px-5 pt-5">
@@ -150,7 +136,7 @@ export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
       <Separator />
 
       <CardContent className="flex-1 p-5">
-        <VideoGrid items={limited} />
+        <VideoGrid items={items} />
       </CardContent>
     </Card>
   );
