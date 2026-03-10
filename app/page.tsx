@@ -16,6 +16,7 @@ import { CalendarWidget } from "@/components/widgets/CalendarWidget";
 import { ErrorCenter } from "@/components/ErrorCenter";
 
 export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
   const urls = config.channels.map(
