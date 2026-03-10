@@ -16,8 +16,8 @@ export function CalendarWidget({ config }: { config: CalendarWidgetConfig }) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 px-5 pt-5 pb-3">
-        <CardTitle className="text-sm font-semibold tracking-tight">
-          {config.title || "Calendar"}
+        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
+          {config.title || "CALENDAR"}
         </CardTitle>
         <Badge variant="outline" className="gap-1 text-[10px] font-semibold uppercase tracking-wide">
           <CalendarDays className="w-3 h-3" />

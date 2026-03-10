@@ -121,8 +121,8 @@ export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
   return (
     <Card className="h-full flex flex-col overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 px-5 pt-5">
-        <CardTitle className="text-sm font-semibold tracking-tight">
-          {config.title || "Latest Videos"}
+        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
+          {config.title || "LATEST VIDEOS"}
         </CardTitle>
         <Badge
           variant="outline"
