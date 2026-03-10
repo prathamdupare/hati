@@ -41,14 +41,14 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
 
   if (!data) {
     return (
-      <Card className="flex flex-col overflow-hidden">
+      <Card className="flex flex-col">
         <CardHeader className="pb-2 px-4 pt-4">
           <CardTitle className="text-sm font-semibold tracking-tight uppercase">
             {config.title || "WEATHER"}
           </CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent className="flex-1 flex items-center justify-center p-6">
+        <CardContent className="flex items-center justify-center p-6">
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <AlertCircle className="h-6 w-6" />
             <span className="text-sm font-medium">Unavailable</span>
@@ -63,7 +63,7 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
   const conditionDesc = current.weatherDesc[0].value;
 
   return (
-    <Card className="flex flex-col overflow-hidden">
+    <Card className="flex flex-col">
       <CardHeader className="pb-2 px-4 pt-4">
         <CardTitle className="text-sm font-semibold tracking-tight uppercase">
           {config.title || "WEATHER"}
@@ -72,7 +72,7 @@ export async function WeatherWidget({ config }: { config: WeatherWidgetConfig })
 
       <Separator />
 
-      <CardContent className="flex-1 flex items-center justify-center p-6">
+      <CardContent className="flex items-center justify-center p-6">
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col gap-1">
             {/* Temperature */}
