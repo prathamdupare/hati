@@ -1,103 +1,156 @@
+"use client";
+
+import { useState } from "react";
 import { runEngine } from "@/lib/hati/engine";
 import { VideoWidgetConfig } from "@/lib/hati/types";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Separator } from "@/components/ui/separator";
+import { PlayCircle, ChevronDown, ChevronUp, Youtube } from "lucide-react";
+
+const INITIAL_LIMIT = 6;
 
 function formatTimeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-
-  if (hours < 1) return "New";
-  if (hours < 24) return `${hours}h`;
-  return `${Math.floor(hours / 24)}d`;
+  const minutes = Math.floor(diff / (1000 * 60));
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+// ─── Inner client component for expand/collapse ────────────────────────────────
+function VideoGrid({ items }: { items: any[] }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const hasMore = items.length > INITIAL_LIMIT;
+  const displayItems = expanded ? items : items.slice(0, INITIAL_LIMIT);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {displayItems.map((item) => (
+          <a
+            key={item.id}
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {/* Thumbnail */}
+            <div className="relative rounded-lg overflow-hidden bg-muted border shadow-sm transition-shadow duration-200 group-hover:shadow-md">
+              <AspectRatio ratio={16 / 9}>
+                {item.thumbnail ? (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                    <Youtube className="w-8 h-8 opacity-30" />
+                  </div>
+                )}
+
+                {/* Play overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/30 backdrop-blur-[1px]">
+                  <div className="rounded-full bg-background/80 p-1 shadow-md border border-border/60">
+                    <PlayCircle className="w-8 h-8 text-foreground" strokeWidth={1.5} />
+                  </div>
+                </div>
+
+                {/* Timestamp pill */}
+                <div className="absolute bottom-2 right-2">
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] h-5 px-1.5 font-medium bg-background/75 backdrop-blur-sm border border-border/40 text-foreground"
+                  >
+                    {formatTimeAgo(item.publishedAt)}
+                  </Badge>
+                </div>
+              </AspectRatio>
+            </div>
+
+            {/* Meta */}
+            <div className="flex flex-col gap-0.5 px-0.5">
+              <span className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline underline-offset-4 decoration-muted-foreground/40">
+                {item.title}
+              </span>
+              <span className="text-xs text-muted-foreground truncate mt-0.5">
+                {item.author}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {hasMore && (
+        <>
+          <Separator className="mt-1" />
+          <div className="flex justify-center pt-1 pb-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setExpanded((v) => !v)}
+              className="gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {expanded ? (
+                <>
+                  <ChevronUp className="w-4 h-4" />
+                  Show less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" />
+                  Show {items.length - INITIAL_LIMIT} more
+                </>
+              )}
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── Main server component ─────────────────────────────────────────────────────
 export async function VideoWidget({ config }: { config: VideoWidgetConfig }) {
   const urls = config.channels.map(
     (id) => `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`
   );
-
   const { items } = await runEngine(urls);
 
-  // Sort: Newest first
   items.sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
-  const limit = config.limit ?? 4;
-  const displayItems = items.slice(0, limit);
+  const limited = config.limit ? items.slice(0, config.limit) : items;
 
   return (
     <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 px-5 pt-5">
+        <CardTitle className="text-sm font-semibold tracking-tight">
           {config.title || "Latest Videos"}
         </CardTitle>
-        {/* Custom style to match YouTube Red, but using Badge structure */}
         <Badge
           variant="outline"
-          className="text-[10px] text-red-500 border-red-500/20 bg-red-500/10 font-bold uppercase"
+          className="gap-1 text-[10px] font-semibold uppercase tracking-wide"
         >
+          <Youtube className="w-3 h-3" />
           YouTube
         </Badge>
       </CardHeader>
 
-      <CardContent className="flex-1 p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {displayItems.map((item) => (
-            <a
-              key={item.id}
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex flex-col gap-2"
-            >
-              {/* Thumbnail with Aspect Ratio */}
-              <div className="relative rounded-md overflow-hidden bg-muted border shadow-sm">
-                <AspectRatio ratio={16 / 9}>
-                  {item.thumbnail ? (
-                    <img
-                      src={item.thumbnail}
-                      alt={item.title}
-                      className="w-full h-full object-cover opacity-90 transition-all duration-300 group-hover:scale-105 group-hover:opacity-100"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-muted">
-                      <span className="text-xs">No Image</span>
-                    </div>
-                  )}
-                </AspectRatio>
+      <Separator />
 
-                {/* Timestamp Overlay */}
-                <div className="absolute bottom-1.5 right-1.5">
-                  <Badge
-                    variant="secondary"
-                    className="bg-black/70 hover:bg-black/80 text-white border-white/10 text-[10px] h-5 px-1.5 backdrop-blur-sm"
-                  >
-                    {formatTimeAgo(item.publishedAt)}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Video Title & Author */}
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium leading-tight group-hover:underline decoration-muted-foreground/50 underline-offset-4 line-clamp-2">
-                  {item.title}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {item.author}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
+      <CardContent className="flex-1 p-5">
+        <VideoGrid items={limited} />
       </CardContent>
     </Card>
   );
