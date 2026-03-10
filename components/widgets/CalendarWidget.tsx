@@ -14,7 +14,7 @@ export function CalendarWidget({ config }: { config: CalendarWidgetConfig }) {
   const weekStartsOn = config["first-day-of-week"] === "monday" ? 1 : 0
   
   return (
-    <Card className="h-fit flex flex-col overflow-hidden">
+    <Card className="h-full flex flex-col overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 px-5 pt-5 pb-3">
         <CardTitle className="text-sm font-semibold tracking-tight">
           {config.title || "Calendar"}
@@ -27,7 +27,7 @@ export function CalendarWidget({ config }: { config: CalendarWidgetConfig }) {
 
       <Separator />
 
-      <CardContent className="p-4">
+      <CardContent className="flex-1 p-4 flex items-center justify-center">
         <Calendar
           mode="single"
           selected={date}
