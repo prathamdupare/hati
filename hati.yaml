@@ -8,7 +8,7 @@ pages:
         widgets:
           - type: weather       # <--- NEW
             location: Bhopal    # <--- Your City
-          - type: hacker-news   # <--- NEW
+          - type: calendar       # <--- NEW
       - size: medium
         widgets:
           - type: videos
@@ -19,7 +19,8 @@ pages:
               - UCsBjURrPoezykLs9EqgamOA # Fireship
               - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
               - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
-          - type: calendar       # <--- NEW
+          - type: lobsters
+            limit: 8
       - size: medium
         widgets:
           - type: rss
@@ -29,4 +30,6 @@ pages:
                 title: Hacker News
               - url: https://timesofindia.indiatimes.com/rssfeedstopstories.cms
                 title: The Times of India
-
+          - type: reddit
+            subreddit: programming
+            limit: 8

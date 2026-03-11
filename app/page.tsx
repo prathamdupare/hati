@@ -5,6 +5,8 @@ import { VideoWidgetClient } from "@/components/widgets/VideoWidget";
 import { WeatherWidget } from "@/components/widgets/WeatherWidget";
 import { RSSWidget } from "@/components/widgets/RSSWidget";
 import { HackerNewsWidget } from "@/components/widgets/HackerNewsWidget";
+import { LobstersWidget } from "@/components/widgets/LobstersWidget";
+import { RedditWidget } from "@/components/widgets/RedditWidget";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   CalendarWidgetConfig,
@@ -12,7 +14,9 @@ import {
   RSSWidgetConfig,
   VideoWidgetConfig,
   WeatherWidgetConfig,
-  HackerNewsWidgetConfig
+  HackerNewsWidgetConfig,
+  LobstersWidgetConfig,
+  RedditWidgetConfig
 } from "@/lib/hati/types";
 import { CalendarWidget } from "@/components/widgets/CalendarWidget";
 import { ErrorCenter } from "@/components/ErrorCenter";
@@ -75,6 +79,14 @@ export default async function Page() {
 
               if (widget.type === "hacker-news") {
                 return <HackerNewsWidget key={widIdx} config={widget as HackerNewsWidgetConfig} />;
+              }
+
+              if (widget.type === "lobsters") {
+                return <LobstersWidget key={widIdx} config={widget as LobstersWidgetConfig} />;
+              }
+
+              if (widget.type === "reddit") {
+                return <RedditWidget key={widIdx} config={widget as RedditWidgetConfig} />;
               }
 
               return (
