@@ -1,76 +1,159 @@
 # Hati
 
-![Version](https://img.shields.io/badge/version-v0.1.0--beta-blue.svg)
-![Status](https://img.shields.io/badge/status-skeleton-orange.svg)
+A self-hosted dashboard that puts all your feeds in one place. Built with Next.js, TypeScript, and Tailwind CSS.
 
-**Hati** is a modular dashboard and content aggregation engine built with Next.js. It features a custom resolver engine to fetch and normalize data from various sources (GitHub, Reddit, YouTube, RSS) into a unified widget interface.
+## Features
 
-> **Note:** This project is currently in **Beta (v0.1.0)**. The core engine ("Skeleton") is stable, but features are actively being added.
+Hati fetches and normalizes content from various sources into a unified widget-based interface.
 
-## 🚀 Features (v0.1.0)
+### Supported Widgets
 
-* **Core Engine:** Custom data fetching and deduplication logic (`lib/hati/engine`).
-* **Resolvers:** Built-in support for:
-    * GitHub
-    * Reddit
-    * YouTube
-    * RSS Feeds
-* **Widgets:** Pre-built UI components for Video, Weather, and RSS feeds.
-* **Tech Stack:** Next.js 14+, TypeScript, Tailwind CSS, Bun, Docker.
+| Widget | Description |
+|--------|-------------|
+| **RSS** | Aggregate multiple RSS/Atom feeds with per-feed limits |
+| **Videos** | YouTube channel videos via RSS feeds |
+| **Hacker News** | Top stories from news.ycombinator.com |
+| **Lobsters** | Hot stories from lobste.rs |
+| **Reddit** | Subreddit posts via RSS feeds |
+| **Weather** | Current weather using wttr.in |
+| **Calendar** | Simple calendar widget |
 
-## 🛠️ Installation
+### Tech Stack
+
+- **Framework:** Next.js 16+
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Runtime:** Bun
+- **Deployment:** Docker
+
+## Getting Started
 
 ### Prerequisites
-* [Bun](https://bun.sh) (Recommended) or Node.js
-* Docker (Optional, for containerized deployment)
 
-### Local Development
+- [Bun](https://bun.sh) (recommended) or Node.js
+- Docker (optional, for containerized deployment)
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/prathamdupare/hati.git](https://github.com/prathamdupare/hati.git)
-    cd hati
-    ```
+### Installation
 
-2.  **Install dependencies:**
-    ```bash
-    bun install
-    ```
+```bash
+# Clone the repository
+git clone https://github.com/prathamdupare/hati.git
+cd hati
 
-3.  **Configure the app:**
-    Create a `.env` file based on your needs, or modify `hati.yaml` for engine configuration.
+# Install dependencies
+bun install
 
-4.  **Run the development server:**
-    ```bash
-    bun dev
-    ```
-    Open [http://localhost:3000](http://localhost:3000) with your browser.
+# Start development server
+bun dev
+```
 
-## 🐳 Docker Deployment
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-A `Dockerfile` and `docker-compose.yml` are included for easy deployment.
+### Configuration
+
+Edit `hati.yaml` to customize your dashboard:
+
+```yaml
+cache:
+  ttl: 300  # Cache duration in seconds
+
+pages:
+  - name: My Dashboard
+    columns:
+      - size: small
+        widgets:
+          - type: weather
+            location: London
+          - type: hacker-news
+            limit: 10
+      - size: medium
+        widgets:
+          - type: rss
+            limit: 10
+            feeds:
+              - url: https://hnrss.org/frontpage
+                title: Hacker News
+              - url: https://example.com/feed.xml
+      - size: medium
+        widgets:
+          - type: videos
+            limit: 6
+            channels:
+              - UCsBjURrPoezykLs9EqgamOA  # Fireship
+```
+
+#### Widget Configuration
+
+**RSS:**
+```yaml
+- type: rss
+  limit: 10
+  feeds:
+    - url: https://example.com/feed.xml
+      title: My Feed
+      limit: 5  # Per-feed limit
+```
+
+**Hacker News / Lobsters:**
+```yaml
+- type: hacker-news
+  limit: 10
+```
+
+**Reddit:**
+```yaml
+- type: reddit
+  subreddit: programming
+  limit: 10
+```
+
+**Weather:**
+```yaml
+- type: weather
+  location: Bhopal
+  units: metric  # or imperial
+```
+
+**Calendar:**
+```yaml
+- type: calendar
+  first-day-of-week: monday  # or sunday
+```
+
+**Videos:**
+```yaml
+- type: videos
+  limit: 10
+  channels:
+    - CHANNEL_ID_1
+    - CHANNEL_ID_2
+```
+
+## Docker Deployment
 
 ```bash
 docker-compose up -d --build
-
 ```
 
-## 🗺️ Roadmap
+## Project Structure
 
-We are currently in the **Skeleton Phase (v0.1.0)**.
+```
+hati/
+├── app/                    # Next.js app router
+│   ├── page.tsx           # Main dashboard page
+│   ├── layout.tsx         # Root layout
+│   └── globals.css        # Global styles
+├── components/
+│   ├── ui/                # shadcn/ui components
+│   └── widgets/           # Dashboard widgets
+├── lib/
+│   └── hati/
+│       ├── engine/        # RSS fetching & parsing
+│       ├── config.ts      # Config loading
+│       └── types.ts       # TypeScript types
+└── hati.yaml              # Dashboard configuration
+```
 
-* [x] Core Engine & Caching
-* [x] Basic Resolvers (GitHub, YT, Reddit)
-* [ ] User Authentication
-* [ ] Plugin System for 3rd party widgets
-* [ ] Customizable Layouts
+## Contributing
 
-## 🤝 Contributing
-
-This project follows Semantic Versioning.
-
-* **Current Branch:** `main` (Development)
-* **Current Release:** `v0.1.0`
-
-Please open an issue to discuss proposed changes before submitting a PR.
-
+Contributions are welcome! Please open an issue to discuss proposed changes before submitting a PR.
