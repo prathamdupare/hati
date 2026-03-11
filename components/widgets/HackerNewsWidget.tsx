@@ -2,12 +2,10 @@ import { HackerNewsWidgetConfig } from "@/lib/hati/types";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExternalLink, Clock, ArrowUpRight } from "lucide-react";
+import { Clock, ArrowUpRight } from "lucide-react";
 
 interface HNItem {
   id: number;
@@ -70,16 +68,12 @@ export async function HackerNewsWidget({ config }: { config: HackerNewsWidgetCon
   const items = await fetchHNItems(limit);
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="pb-2 px-4 pt-4">
-        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
-          {config.title || "HACKER NEWS"}
-        </CardTitle>
-      </CardHeader>
-
-      <Separator />
-
-      <CardContent className="flex-1 p-0 overflow-hidden">
+    <>
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        {config.title || "HACKER NEWS"}
+      </h2>
+      <Card className="h-full flex flex-col overflow-hidden">
+        <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
           <ul className="flex flex-col py-1">
             {items.map((item, index) => (
@@ -114,7 +108,7 @@ export async function HackerNewsWidget({ config }: { config: HackerNewsWidgetCon
                     </div>
                   </div>
 
-                  <ExternalLink className="absolute right-4 top-3.5 w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  <ArrowUpRight className="absolute right-4 top-3.5 w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                 </a>
 
                 {index < items.length - 1 && (
@@ -126,5 +120,6 @@ export async function HackerNewsWidget({ config }: { config: HackerNewsWidgetCon
         </ScrollArea>
       </CardContent>
     </Card>
+    </>
   );
 }
