@@ -100,6 +100,7 @@ export interface RedditWidgetConfig extends BaseWidget {
   type: "reddit";
   subreddit: string;
   "show-thumbnails"?: boolean;
+  limit?: number;
 }
 
 export interface WeatherWidgetConfig extends BaseWidget {
@@ -129,6 +130,11 @@ export interface HackerNewsWidgetConfig extends BaseWidget {
   limit?: number;
 }
 
+export interface LobstersWidgetConfig extends BaseWidget {
+  type: "lobsters";
+  limit?: number;
+}
+
 export interface GroupWidgetConfig extends BaseWidget {
   type: "group";
   widgets: WidgetConfig[]; 
@@ -145,6 +151,7 @@ export type WidgetConfig =
   | MarketsWidgetConfig
   | ReleasesWidgetConfig
   | HackerNewsWidgetConfig
+  | LobstersWidgetConfig
   | GroupWidgetConfig
   | BaseWidget; 
 
