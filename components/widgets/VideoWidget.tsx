@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { VideoWidgetConfig, HatiItem } from "@/lib/hati/types";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -119,18 +119,15 @@ interface VideoWidgetClientProps {
 
 export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
   return (
-    <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="pb-2 px-4 pt-4">
-        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
-          {config.title || "LATEST VIDEOS"}
-        </CardTitle>
-      </CardHeader>
-
-      <Separator />
-
-      <CardContent className="flex-1 p-5">
+    <>
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        {config.title || "LATEST VIDEOS"}
+      </h2>
+      <Card className="h-full flex flex-col overflow-hidden">
+        <CardContent className="flex-1 p-5">
         <VideoGrid items={items} />
       </CardContent>
     </Card>
+    </>
   );
 }

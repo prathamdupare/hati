@@ -124,6 +124,11 @@ export interface ReleasesWidgetConfig extends BaseWidget {
   repositories: string[]; 
 }
 
+export interface HackerNewsWidgetConfig extends BaseWidget {
+  type: "hacker-news";
+  limit?: number;
+}
+
 export interface GroupWidgetConfig extends BaseWidget {
   type: "group";
   widgets: WidgetConfig[]; 
@@ -139,6 +144,7 @@ export type WidgetConfig =
   | WeatherWidgetConfig
   | MarketsWidgetConfig
   | ReleasesWidgetConfig
+  | HackerNewsWidgetConfig
   | GroupWidgetConfig
   | BaseWidget; 
 

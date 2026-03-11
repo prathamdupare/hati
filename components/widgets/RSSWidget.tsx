@@ -2,15 +2,11 @@ import { runEngine } from "@/lib/hati/engine";
 import { RSSWidgetConfig } from "@/lib/hati/types";
 import {
   Card,
-  CardAction,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Rss, ArrowUpRight, Clock } from "lucide-react";
+import { ArrowUpRight, Clock } from "lucide-react";
 
 function formatTimeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -35,15 +31,12 @@ export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
   const isMultiFeed = config.feeds.length > 1;
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden">
-      <CardHeader className="pb-2 px-4 pt-4">
-        <CardTitle className="text-sm font-semibold tracking-tight uppercase">
-          {config.title ||
-            (config.feeds.length === 1 ? config.feeds[0].title : "FEEDS")}
-        </CardTitle>
-      </CardHeader>
-
-      <Separator />
+    <>
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        {config.title ||
+          (config.feeds.length === 1 ? config.feeds[0].title : "FEEDS")}
+      </h2>
+      <Card className="h-full flex flex-col overflow-hidden">
 
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
@@ -93,5 +86,6 @@ export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
         </ScrollArea>
       </CardContent>
     </Card>
+    </>
   );
 }

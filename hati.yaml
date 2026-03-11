@@ -8,7 +8,7 @@ pages:
         widgets:
           - type: weather       # <--- NEW
             location: Bhopal    # <--- Your City
-          - type: calendar       # <--- NEW
+          - type: hacker-news   # <--- NEW
       - size: medium
         widgets:
           - type: videos
@@ -19,6 +19,7 @@ pages:
               - UCsBjURrPoezykLs9EqgamOA # Fireship
               - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
               - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
+          - type: calendar       # <--- NEW
       - size: medium
         widgets:
           - type: rss

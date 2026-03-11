@@ -4,13 +4,15 @@ import { Column } from "@/components/Column";
 import { VideoWidgetClient } from "@/components/widgets/VideoWidget";
 import { WeatherWidget } from "@/components/widgets/WeatherWidget";
 import { RSSWidget } from "@/components/widgets/RSSWidget";
+import { HackerNewsWidget } from "@/components/widgets/HackerNewsWidget";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   CalendarWidgetConfig,
   EngineError,
   RSSWidgetConfig,
   VideoWidgetConfig,
-  WeatherWidgetConfig
+  WeatherWidgetConfig,
+  HackerNewsWidgetConfig
 } from "@/lib/hati/types";
 import { CalendarWidget } from "@/components/widgets/CalendarWidget";
 import { ErrorCenter } from "@/components/ErrorCenter";
@@ -69,6 +71,10 @@ export default async function Page() {
 
               if (widget.type === "weather") {
                 return <WeatherWidget key={widIdx} config={widget as WeatherWidgetConfig} />;
+              }
+
+              if (widget.type === "hacker-news") {
+                return <HackerNewsWidget key={widIdx} config={widget as HackerNewsWidgetConfig} />;
               }
 
               return (
