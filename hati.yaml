@@ -1,17 +1,14 @@
+cache:
+  ttl: 300  # Cache feed content for 5 minutes (300 seconds)
+
 pages:
   - name: Pratham's Dashboard
     columns:
       - size: small
         widgets:
           - type: weather       # <--- NEW
-            location: London    # <--- Your City
-          - type: rss
-            limit: 20
-            feeds:
-              - url: https://hnrss.org/frontpage
-                title: Hacker News
-              - url: https://timesofindia.indiatimes.com/rssfeedstopstories.cms
-                title: The Times of India
+            location: Bhopal    # <--- Your City
+          - type: calendar       # <--- NEW
       - size: medium
         widgets:
           - type: videos
@@ -19,3 +16,20 @@ pages:
             channels:
               - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
               - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
+              - UCsBjURrPoezykLs9EqgamOA # Fireship
+              - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
+              - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
+          - type: lobsters
+            limit: 8
+      - size: medium
+        widgets:
+          - type: rss
+            limit: 5
+            feeds:
+              - url: https://hnrss.org/frontpage
+                title: Hacker News
+              - url: https://timesofindia.indiatimes.com/rssfeedstopstories.cms
+                title: The Times of India
+          - type: reddit
+            subreddit: programming
+            limit: 8

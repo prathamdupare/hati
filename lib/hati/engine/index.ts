@@ -1,43 +1,38 @@
-import { resolve } from "../resolvers"
-import { cachedFetch, getCachedResolution, setCachedResolution } from "./cache"
+import { cachedFetch } from "./cache"
 import { parse } from "./parse"
 import { normalize } from "./normalize"
 import { dedupe } from "./dedupe"
-import { HatiItem } from "../types"
+import { EngineError, HatiItem } from "../types"
 
-export async function runEngine(urls: string[]): Promise<HatiItem[]> {
+
+export interface EngineResult {
+  items: HatiItem[];
+  errors: EngineError[];
+}
+
+export async function runEngine(urls: string[]): Promise<EngineResult> {
+  const errors: EngineError[] = [];
   const jobs = urls.map(async (url) => {
     try {
-      // 1. Resolve & Cache Check
-      let feedUrl = getCachedResolution(url);
-      if (!feedUrl) {
-        if (url.includes("/feeds/videos.xml")) {
-          feedUrl = url;
-        } else {
-          feedUrl = await resolve(url);
-        }
-        if (feedUrl) setCachedResolution(url, feedUrl);
-      }
-
-      // 2. Fetch
-      const xml = await cachedFetch(feedUrl || url);
-
-      // 3. Parse (MUST BE AWAITED NOW)
+      const xml = await cachedFetch(url);
       const parsed = await parse(xml);
-
-      // 4. Normalize
       return normalize(parsed);
-
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(`Engine error for ${url}: ${err.message}`);
-      } else {
-        console.error(`Unexpected error for ${url}:`, err);
-      }
+      const message = err instanceof Error ? err.message : "Unknown error";
+      errors.push({
+        url,
+        message,
+        timestamp: new Date().toLocaleTimeString(),
+      });
       return []
     }
   })
 
   const results = await Promise.all(jobs)
-  return dedupe(results.flat())
+  return {
+    items: dedupe(results.flat()),
+    errors: errors
+
+  }
+
 }

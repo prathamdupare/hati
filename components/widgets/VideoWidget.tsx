@@ -1,79 +1,133 @@
-import { runEngine } from "@/lib/hati/engine";
-import { VideoWidget as VideoConfig } from "@/lib/hati/config";
+"use client";
 
-function timeAgo(dateStr: string) {
+import { useState } from "react";
+import { VideoWidgetConfig, HatiItem } from "@/lib/hati/types";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Separator } from "@/components/ui/separator";
+import { PlayCircle, ChevronDown, ChevronUp, Youtube } from "lucide-react";
+
+const INITIAL_LIMIT = 6;
+
+function formatTimeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-
-  if (hours < 1) return "New";
-  if (hours < 24) return `${hours}h`;
-  return `${Math.floor(hours / 24)}d`;
+  const minutes = Math.floor(diff / (1000 * 60));
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export async function VideoWidget({ config }: { config: VideoConfig }) {
-  const urls = config.channels.map(
-    id => `https://www.youtube.com/feeds/videos.xml?channel_id=${id}`
-  );
+function VideoGrid({ items }: { items: HatiItem[] }) {
+  const [expanded, setExpanded] = useState(false);
 
-  const items = await runEngine(urls);
-  items.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-
-  const limit = config.limit ?? 4;
-  const displayItems = items.slice(0, limit);
+  const hasMore = items.length > INITIAL_LIMIT;
+  const displayItems = expanded ? items : items.slice(0, INITIAL_LIMIT);
 
   return (
-    <div className="bg-card text-card-foreground border rounded-xl overflow-hidden shadow-sm flex flex-col h-full">
-      {/* Header */}
-      <div className="px-5 py-4 border-b flex justify-between items-center bg-muted/20">
-        <h3 className="font-semibold text-sm">Latest Videos</h3>
-        {/* We keep red here as it is platform branding, but rely on 'destructive' or standard colors for the bg */}
-        <span className="text-[10px] bg-red-500/10 text-red-500 px-2 py-0.5 rounded border border-red-500/20 uppercase tracking-wider font-bold">
-          YouTube
-        </span>
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {displayItems.map((item) => (
           <a
             key={item.id}
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col gap-2"
+            className="group flex flex-col gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {/* Thumbnail Container */}
-            <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-muted border shadow-sm">
-              {item.thumbnail ? (
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 ease-out"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-muted">
-                  <span className="text-xs">No Image</span>
-                </div>
-              )}
+            <div className="relative rounded-lg overflow-hidden bg-muted border shadow-sm transition-shadow duration-200 group-hover:shadow-md">
+              <AspectRatio ratio={16 / 9}>
+                {item.thumbnail ? (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                    <Youtube className="w-8 h-8 opacity-30" />
+                  </div>
+                )}
 
-              {/* Timestamp Badge - Keep dark background for contrast over images */}
-              <div className="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-md text-white text-[10px] font-medium px-1.5 py-0.5 rounded border border-white/10 shadow-lg">
-                {timeAgo(item.publishedAt)}
-              </div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/30 backdrop-blur-[1px]">
+                  <div className="rounded-full bg-background/80 p-1 shadow-md border border-border/60">
+                    <PlayCircle className="w-8 h-8 text-foreground" strokeWidth={1.5} />
+                  </div>
+                </div>
+
+                <div className="absolute bottom-2 right-2">
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] h-5 px-1.5 font-medium bg-background/75 backdrop-blur-sm border border-border/40 text-foreground"
+                  >
+                    {formatTimeAgo(item.publishedAt)}
+                  </Badge>
+                </div>
+              </AspectRatio>
             </div>
 
-            {/* Meta Data */}
             <div className="flex flex-col gap-0.5 px-0.5">
-              <span className="text-[13px] font-medium leading-snug group-hover:text-primary transition-colors line-clamp-2">
+              <span className="text-sm font-medium leading-snug line-clamp-2 group-hover:underline underline-offset-4 decoration-muted-foreground/40">
                 {item.title}
               </span>
-              <span className="text-[11px] text-muted-foreground font-medium">
+              <span className="text-xs text-muted-foreground truncate mt-0.5">
                 {item.author}
               </span>
             </div>
           </a>
         ))}
       </div>
+
+      {hasMore && (
+        <>
+          <Separator className="mt-1" />
+          <div className="flex justify-center pt-1 pb-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setExpanded((v: boolean) => !v)}
+              className="gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {expanded ? (
+                <>
+                  <ChevronUp className="w-4 h-4" />
+                  Show less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" />
+                  Show {items.length - INITIAL_LIMIT} more
+                </>
+              )}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
+  );
+}
+
+interface VideoWidgetClientProps {
+  items: HatiItem[];
+  config: VideoWidgetConfig;
+}
+
+export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
+  return (
+    <>
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+        {config.title || "LATEST VIDEOS"}
+      </h2>
+      <Card className="h-full flex flex-col overflow-hidden">
+        <CardContent className="flex-1 p-5">
+        <VideoGrid items={items} />
+      </CardContent>
+    </Card>
+    </>
   );
 }

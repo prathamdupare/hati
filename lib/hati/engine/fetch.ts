@@ -4,6 +4,7 @@ export async function fetchFeed(url: string): Promise<string> {
       "User-Agent": "Hati-Aggregator/1.0",
       "Connection": "keep-alive"
     },
+    next: { revalidate: 60 }
   })
 
   if (!res.ok) {
