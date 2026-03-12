@@ -2,6 +2,8 @@
 
 A self-hosted dashboard that puts all your feeds in one place. Built with Next.js, TypeScript, and Tailwind CSS.
 
+![Hati Dashboard](./content/demo.png)
+
 ## Features
 
 Hati fetches and normalizes content from various sources into a unified widget-based interface.
