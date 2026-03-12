@@ -1,4 +1,4 @@
-import { HatiItem, RawFeed } from "../types";
+import { HatiItem, RawFeed, RawFeedItem } from "../types";
 
 // Helper: Deterministic Hash
 const simpleHash = (str: string) => {
@@ -14,8 +14,8 @@ const simpleHash = (str: string) => {
 export function normalize(feed: RawFeed): HatiItem[] {
   const feedTitle = feed.title ?? "Unknown Feed";
 
-  // Use 'any' for item to accommodate rss-parser's dynamic structure
-  return (feed.items ?? []).map((item: any) => {
+  // Use RawFeedItem for rss-parser structure
+  return (feed.items ?? []).map((item: RawFeedItem) => {
     const title = item.title ?? "Untitled";
     const link = item.link ?? "";
 
@@ -28,10 +28,9 @@ export function normalize(feed: RawFeed): HatiItem[] {
 
     if (item.media && item.media['media:thumbnail']) {
       const thumbs = item.media['media:thumbnail'];
-      if (Array.isArray(thumbs) && thumbs.length > 0) {
-        thumbnail = thumbs[0].$.url;
-      } else if (thumbs.$ && thumbs.$.url) {
-        thumbnail = thumbs.$.url;
+      const firstThumb = thumbs && (Array.isArray(thumbs) ? thumbs[0] : thumbs);
+      if (firstThumb) {
+        thumbnail = firstThumb.$?.url ?? firstThumb.url;
       }
     }
 

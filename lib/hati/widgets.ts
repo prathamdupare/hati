@@ -5,8 +5,63 @@ import {
   HackerNewsWidgetConfig,
   LobstersWidgetConfig,
   RedditWidgetConfig,
-  HatiItem
+  HatiItem,
+  HackerNewsItem,
+  LobstersItem,
+  PageConfig
 } from "./types";
+
+type WidgetData = HatiItem[];
+
+interface FetchResult {
+  widgetKey: string;
+  data?: WidgetData;
+}
+
+export async function fetchAllWidgetData(page: PageConfig): Promise<Map<string, WidgetData>> {
+  const fetchPromises: Promise<FetchResult>[] = [];
+  let widgetIndex = 0;
+
+  for (const col of page.columns) {
+    for (const widget of col.widgets) {
+      const widgetKey = `widget-${widgetIndex}`;
+      
+      let fetcher: Promise<HatiItem[]>;
+      switch (widget.type) {
+        case "videos":
+          fetcher = fetchVideoData(widget as VideoWidgetConfig);
+          break;
+        case "rss":
+          fetcher = fetchRSSData(widget as RSSWidgetConfig);
+          break;
+        case "hacker-news":
+          fetcher = fetchHackerNewsData(widget as HackerNewsWidgetConfig);
+          break;
+        case "lobsters":
+          fetcher = fetchLobstersData(widget as LobstersWidgetConfig);
+          break;
+        case "reddit":
+          fetcher = fetchRedditData(widget as RedditWidgetConfig);
+          break;
+        default:
+          fetcher = Promise.resolve([]);
+      }
+      
+      fetchPromises.push(
+        fetcher.then(data => ({ widgetKey, data })).catch(() => ({ widgetKey, data: [] as WidgetData }))
+      );
+      widgetIndex++;
+    }
+  }
+
+  const results = await Promise.all(fetchPromises);
+  const dataMap = new Map<string, WidgetData>();
+  for (const result of results) {
+    dataMap.set(result.widgetKey, result.data || []);
+  }
+
+  return dataMap;
+}
 
 export async function fetchVideoData(config: VideoWidgetConfig): Promise<HatiItem[]> {
   const urls = config.channels.map(
@@ -39,7 +94,7 @@ export async function fetchHackerNewsData(config: HackerNewsWidgetConfig): Promi
       return itemRes.json();
     })
   );
-  return items.filter(Boolean).map((item: any) => ({
+  return items.filter(Boolean).map((item: HackerNewsItem) => ({
     id: String(item.id),
     title: item.title,
     link: item.url || `https://news.ycombinator.com/item?id=${item.id}`,
@@ -54,7 +109,7 @@ export async function fetchLobstersData(config: LobstersWidgetConfig): Promise<H
   const res = await fetch("https://lobste.rs/hottest.json", { next: { revalidate: 300 } });
   if (!res.ok) throw new Error("Failed to fetch Lobsters");
   const data = await res.json();
-  return data.slice(0, limit).map((item: any) => ({
+  return data.slice(0, limit).map((item: LobstersItem) => ({
     id: item.url,
     title: item.title,
     link: item.url,

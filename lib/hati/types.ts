@@ -19,14 +19,22 @@ export interface HatiFeed {
 // Used by the RSS Parser engine
 export interface RawFeedItem {
   id?: string;
+  guid?: string;
   link?: string;
   title?: string;
   published?: Date | string;
+  isoDate?: string;
   pubDate?: string;
   created?: number;
   content?: string;
+  contentSnippet?: string;
   summary?: string;
+  creator?: string;
+  author?: string;
   authors?: { name?: string }[];
+  
+  // rss-parser flattens these from namespaces
+  videoId?: string;
   
   // NAMESPACE EXTENSIONS
   yt?: {
@@ -39,6 +47,8 @@ export interface RawFeedItem {
       thumbnail?: { url: string } | { url: string }[];
       content?: { url: string };
     };
+    // rss-parser uses this format for media:thumbnail
+    'media:thumbnail'?: { $?: { url: string }; url?: string } | { $?: { url: string }; url?: string }[];
   };
 }
 
@@ -180,4 +190,19 @@ export interface EngineError {
   url: string;
   message: string;
   timestamp: string;
+}
+
+export interface HackerNewsItem {
+  id: number;
+  title: string;
+  url?: string;
+  time: number;
+  by: string;
+}
+
+export interface LobstersItem {
+  url: string;
+  title: string;
+  created_at: string;
+  submitter: string;
 }

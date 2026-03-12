@@ -21,6 +21,8 @@ pages:
               - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
           - type: lobsters
             limit: 8
+          - type: hacker-news
+            limit: 8
       - size: medium
         widgets:
           - type: rss
@@ -33,10 +35,3 @@ pages:
           - type: reddit
             subreddit: programming
             limit: 8
-          - type: releases
-            limit: 5
-            repositories:
-              - syncthing/syncthing
-              - immich-app/immich
-              - go-gitea/gitea
-              - glanceapp/glance
