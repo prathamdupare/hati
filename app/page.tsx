@@ -7,6 +7,7 @@ import { RSSWidget } from "@/components/widgets/RSSWidget";
 import { HackerNewsWidget } from "@/components/widgets/HackerNewsWidget";
 import { LobstersWidget } from "@/components/widgets/LobstersWidget";
 import { RedditWidget } from "@/components/widgets/RedditWidget";
+import { ReleasesWidget } from "@/components/widgets/ReleasesWidget";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   CalendarWidgetConfig,
@@ -16,6 +17,7 @@ import {
   HackerNewsWidgetConfig,
   LobstersWidgetConfig,
   RedditWidgetConfig,
+  ReleasesWidgetConfig,
   WidgetConfig,
   HatiItem
 } from "@/lib/hati/types";
@@ -168,6 +170,9 @@ export default async function Page() {
     }
     if (widget.type === "reddit") {
       return <RedditWidget key={widIdx} config={widget as RedditWidgetConfig} />;
+    }
+    if (widget.type === "releases") {
+      return <ReleasesWidget key={widIdx} config={widget as ReleasesWidgetConfig} />;
     }
     return (
       <div key={widIdx} className="p-4 rounded-xl border border-dashed border-muted text-muted-foreground text-xs text-center">
