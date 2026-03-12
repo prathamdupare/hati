@@ -8,17 +8,17 @@ interface ColumnProps {
 
 export function Column({ size, children }: ColumnProps) {
   const widthClasses: Record<ColumnSize, string> = {
-    small: "w-full lg:w-[25%]",
-    medium: "w-full lg:w-[33.333%]",
-    large: "w-full lg:w-[50%]",
-    full: "w-full",
+    small: "flex-[1]",
+    medium: "flex-[1.5]",
+    large: "flex-[2]",
+    full: "flex-[3]",
   };
 
   return (
     <div 
       className={cn(
         "flex flex-col gap-6 min-w-0",
-        widthClasses[size] || "w-full"
+        widthClasses[size] || "flex-[1]"
       )}
     >
       {children}
