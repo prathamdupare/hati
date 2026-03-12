@@ -193,7 +193,7 @@ export default async function Page() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 max-w-[1800px] mx-auto">
+      <div className="flex flex-col lg:flex-row gap-6 max-w-[1800px] mx-auto px-2">
         {page.columns.map((col, colIdx) => (
           <Column key={colIdx} size={col.size}>
             {col.widgets.map((widget, widIdx) => renderWidget(widget, widIdx))}

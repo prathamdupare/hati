@@ -23,6 +23,13 @@ pages:
             limit: 8
       - size: medium
         widgets:
+          - type: releases
+            limit: 5
+            repositories:
+              - syncthing/syncthing
+              - immich-app/immich
+              - go-gitea/gitea
+              - glanceapp/glance
           - type: rss
             limit: 5
             feeds:
@@ -33,12 +40,4 @@ pages:
           - type: reddit
             subreddit: programming
             limit: 8
-      - size: medium
-        widgets:
-          - type: releases
-            limit: 5
-            repositories:
-              - syncthing/syncthing
-              - immich-app/immich
-              - go-gitea/gitea
-              - glanceapp/glance
+
