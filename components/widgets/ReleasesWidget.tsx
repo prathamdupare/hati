@@ -80,9 +80,9 @@ export async function ReleasesWidget({ config }: { config: ReleasesWidgetConfig 
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
         {config.title || "RELEASES"}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <CardContent className="flex-1 p-0 overflow-hidden">
-          <ScrollArea className="h-full">
+      <Card className="flex flex-col overflow-hidden">
+        <CardContent className="p-0 overflow-hidden">
+          <ScrollArea className="h-[300px]">
             <ul className="flex flex-col py-1">
               {flatReleases.map((release, index) => (
                 <li key={`${release.repository}-${release.id}`}>

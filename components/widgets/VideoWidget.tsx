@@ -126,8 +126,8 @@ export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
         {config.title || "LATEST VIDEOS"}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <CardContent className="flex-1 p-5">
+      <Card className="flex flex-col overflow-hidden">
+        <CardContent className="p-5">
         <VideoGrid items={items} />
       </CardContent>
     </Card>

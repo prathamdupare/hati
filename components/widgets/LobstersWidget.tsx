@@ -59,9 +59,9 @@ export async function LobstersWidget({ config }: { config: LobstersWidgetConfig 
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
         {config.title || "LOBSTERS"}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <CardContent className="flex-1 p-0 overflow-hidden">
-          <ScrollArea className="h-full">
+      <Card className="flex flex-col overflow-hidden">
+        <CardContent className="p-0 overflow-hidden">
+          <ScrollArea className="h-[300px]">
             <ul className="flex flex-col py-1">
               {items.map((item, index) => (
                 <li key={item.url}>

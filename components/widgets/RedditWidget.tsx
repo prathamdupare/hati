@@ -29,9 +29,9 @@ export async function RedditWidget({ config }: { config: RedditWidgetConfig }) {
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
         {config.title || `R/${config.subreddit.toUpperCase()}`}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <CardContent className="flex-1 p-0 overflow-hidden">
-          <ScrollArea className="h-full">
+      <Card className="flex flex-col overflow-hidden">
+        <CardContent className="p-0 overflow-hidden">
+          <ScrollArea className="h-[300px]">
             <ul className="flex flex-col py-1">
               {displayItems.map((item, index) => (
                 <li key={item.id}>
