@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { VideoWidgetConfig, HatiItem } from "@/lib/hati/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,10 +44,12 @@ function VideoGrid({ items }: { items: HatiItem[] }) {
             <div className="relative rounded-lg overflow-hidden bg-muted border shadow-sm transition-shadow duration-200 group-hover:shadow-md">
               <AspectRatio ratio={16 / 9}>
                 {item.thumbnail ? (
-                  <img
+                  <Image
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
@@ -123,8 +126,8 @@ export function VideoWidgetClient({ items, config }: VideoWidgetClientProps) {
       <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
         {config.title || "LATEST VIDEOS"}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <CardContent className="flex-1 p-5">
+      <Card className="flex flex-col overflow-hidden">
+        <CardContent className="p-5">
         <VideoGrid items={items} />
       </CardContent>
     </Card>

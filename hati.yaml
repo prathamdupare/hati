@@ -21,6 +21,8 @@ pages:
               - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
           - type: lobsters
             limit: 8
+          - type: hacker-news
+            limit: 8
       - size: medium
         widgets:
           - type: rss

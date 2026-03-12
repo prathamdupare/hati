@@ -36,10 +36,10 @@ export async function RSSWidget({ config }: { config: RSSWidgetConfig }) {
         {config.title ||
           (config.feeds.length === 1 ? config.feeds[0].title : "FEEDS")}
       </h2>
-      <Card className="h-full flex flex-col overflow-hidden">
+      <Card className="flex flex-col overflow-hidden">
 
-      <CardContent className="flex-1 p-0 overflow-hidden">
-        <ScrollArea className="h-full">
+      <CardContent className="p-0 overflow-hidden">
+        <ScrollArea className="h-[300px]">
           <ul className="flex flex-col py-1">
             {displayItems.map((item, index) => (
               <li key={item.id}>
