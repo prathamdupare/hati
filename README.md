@@ -1,5 +1,7 @@
 # Hati
 
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A self-hosted dashboard that puts all your feeds in one place. Built with Next.js, TypeScript, and Tailwind CSS.
 
 ![Hati Dashboard](/content/demo.png)
@@ -179,3 +181,7 @@ hati/
 ## Contributing
 
 Contributions are welcome! Please open an issue to discuss proposed changes before submitting a PR.
+
+## License
+
+MIT © 2026 Pratham Dupare
