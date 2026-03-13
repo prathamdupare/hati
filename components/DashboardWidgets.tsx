@@ -8,7 +8,8 @@ import {
   RedditWidgetConfig,
   ReleasesWidgetConfig,
   HatiItem,
-  WidgetConfig
+  WidgetConfig,
+  SearchWidgetConfig
 } from "@/lib/hati/types";
 import { CalendarWidget } from "@/components/widgets/CalendarWidget";
 import { VideoWidgetClient } from "@/components/widgets/VideoWidget";
@@ -18,6 +19,7 @@ import { HackerNewsWidget } from "@/components/widgets/HackerNewsWidget";
 import { LobstersWidget } from "@/components/widgets/LobstersWidget";
 import { RedditWidget } from "@/components/widgets/RedditWidget";
 import { ReleasesWidget } from "@/components/widgets/ReleasesWidget";
+import { SearchWidget } from "./widgets/SearchWidget";
 
 type WidgetData = HatiItem[];
 
@@ -44,6 +46,8 @@ export function DashboardWidgets({ widget, data }: DashboardWidgetsProps) {
       return <RedditWidget config={widget as RedditWidgetConfig} />;
     case "releases":
       return <ReleasesWidget config={widget as ReleasesWidgetConfig} />;
+    case "search":
+      return <SearchWidget config={widget as SearchWidgetConfig} />;
     default:
       return (
         <div className="p-4 rounded-xl border border-dashed border-muted text-muted-foreground text-xs text-center">
