@@ -19,6 +19,7 @@ Hati fetches and normalizes content from various sources into a unified widget-b
 | **Reddit** | Subreddit posts via RSS feeds |
 | **Weather** | Current weather using wttr.in |
 | **Calendar** | Simple calendar widget |
+| **Search** | Search with Google, Brave, DuckDuckGo, or Bing |
 
 ### Tech Stack
 
@@ -32,8 +33,8 @@ Hati fetches and normalizes content from various sources into a unified widget-b
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (recommended) or Node.js
-- Docker (optional, for containerized deployment)
+- [Bun](https://bun.sh) (for local development)
+- Docker (for containerized deployment)
 
 ### Installation
 
@@ -131,11 +132,30 @@ pages:
     - CHANNEL_ID_2
 ```
 
+**Search:**
+```yaml
+- type: search
+  engine: google  # brave, duckduckgo, bing
+```
+
 ## Docker Deployment
 
 ```bash
+# Clone the repository
+git clone https://github.com/prathamdupare/hati.git
+cd hati
+
+# Build and run
 docker-compose up -d --build
+
+# Open in browser
+http://localhost:3000
 ```
+
+The container will:
+- Build the Next.js app
+- Run on port 3000
+- Mount `hati.yaml` for live config changes
 
 ## Project Structure
 
