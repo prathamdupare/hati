@@ -6,6 +6,8 @@ pages:
     columns:
       - size: small
         widgets:
+          - type: search
+            engine: google
           - type: weather       # <--- NEW
             location: Bhopal    # <--- Your City
           - type: calendar       # <--- NEW
