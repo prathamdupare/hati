@@ -32,17 +32,17 @@ export interface RawFeedItem {
   creator?: string;
   author?: string;
   authors?: { name?: string }[];
-  
+
   // rss-parser flattens these from namespaces
   videoId?: string;
-  
+
   // NAMESPACE EXTENSIONS
   yt?: {
     videoId?: string;
     channelId?: string;
   };
   media?: {
-    thumbnail?: { url: string } | { url: string }[]; 
+    thumbnail?: { url: string } | { url: string }[];
     group?: {
       thumbnail?: { url: string } | { url: string }[];
       content?: { url: string };
@@ -57,25 +57,26 @@ export interface RawFeed {
   items?: RawFeedItem[];
 }
 
-export type WidgetType = 
-  | "calendar" 
-  | "rss" 
-  | "twitch-channels" 
-  | "group" 
-  | "hacker-news" 
-  | "lobsters" 
-  | "videos" 
-  | "reddit" 
-  | "weather" 
-  | "markets" 
-  | "releases";
+export type WidgetType =
+  | "calendar"
+  | "rss"
+  | "twitch-channels"
+  | "group"
+  | "hacker-news"
+  | "lobsters"
+  | "videos"
+  | "reddit"
+  | "weather"
+  | "markets"
+  | "releases"
+  | "search";
 
 export type ColumnSize = "small" | "medium" | "large" | "full";
 
 export interface BaseWidget {
   type: WidgetType;
   title?: string;
-  cache?: string; 
+  cache?: string;
 }
 
 
@@ -88,10 +89,10 @@ export interface RSSWidgetConfig extends BaseWidget {
   type: "rss";
   limit?: number;
   "collapse-after"?: number;
-  feeds: { 
-    url: string; 
-    title?: string; 
-    limit?: number 
+  feeds: {
+    url: string;
+    title?: string;
+    limit?: number
   }[];
 }
 
@@ -102,7 +103,7 @@ export interface TwitchChannelsWidgetConfig extends BaseWidget {
 
 export interface VideoWidgetConfig extends BaseWidget {
   type: "videos";
-  channels: string[]; 
+  channels: string[];
   limit?: number;
 }
 
@@ -123,16 +124,16 @@ export interface WeatherWidgetConfig extends BaseWidget {
 
 export interface MarketsWidgetConfig extends BaseWidget {
   type: "markets";
-  markets: { 
-    symbol: string; 
-    name?: string 
+  markets: {
+    symbol: string;
+    name?: string
   }[];
 }
 
 export interface ReleasesWidgetConfig extends BaseWidget {
   type: "releases";
   token?: string;
-  repositories: string[]; 
+  repositories: string[];
 }
 
 export interface HackerNewsWidgetConfig extends BaseWidget {
@@ -144,14 +145,20 @@ export interface LobstersWidgetConfig extends BaseWidget {
   type: "lobsters";
   limit?: number;
 }
+export type SearchEngine = "google" | "brave" | "duckduckgo" | "bing"
+
+export interface SearchWidgetConfig extends BaseWidget {
+  type: "search";
+  engine: SearchEngine;
+}
 
 export interface GroupWidgetConfig extends BaseWidget {
   type: "group";
-  widgets: WidgetConfig[]; 
+  widgets: WidgetConfig[];
 }
 
 // Union of all possible widget configurations
-export type WidgetConfig = 
+export type WidgetConfig =
   | CalendarWidgetConfig
   | RSSWidgetConfig
   | TwitchChannelsWidgetConfig
@@ -163,7 +170,8 @@ export type WidgetConfig =
   | HackerNewsWidgetConfig
   | LobstersWidgetConfig
   | GroupWidgetConfig
-  | BaseWidget; 
+  | SearchWidgetConfig
+  | BaseWidget;
 
 export interface ColumnConfig {
   size: ColumnSize;
